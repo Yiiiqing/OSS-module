@@ -8,12 +8,10 @@
 ### key 在env中自定义, 需要告诉客户端人员key值
 
 ### API
-1. add
-    - post
+1. add(post)
     - file 文件
     - prefix 前缀(用于区分项目)
     - key 前后端共有key,用于验证
 
-2. get
-    - get
+2. get(get)
     - filename 文件名,为add接口返回的
