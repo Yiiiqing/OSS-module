@@ -49,26 +49,34 @@ let upload = multer({
     cb(null, true);
   }
 });
+//home
+app.get('/',function(req,res,next){
+  res.send(`oss 上传模块
+    - /add 添加,需上传file,prefix(前缀,建议为项目英文名)
+    - /get 获取,需上传获取的url链接
+  `)
+})
 //上传
 app.post("/add", upload.single("file"), async function(req, res, next) {
-  let key = await decrypt(req.body.key);
-  var time = new Date().getTime().toString();
-  console.log(req.file);
+  // 因为加入api网关,遂取消身份验证
+  // let key = await decrypt(req.body.key);
+  // var time = new Date().getTime().toString();
+  // console.log(req.file);
 
-  if (!key || time - key > 100000) {
-    //key 错误或者十秒外
-    //删除本地文件
-    let deleteResult = await deleteFile(req.file.path, 0);
-    if (deleteResult) {
-      console.log("删除本地文件成功");
-    }else{
-        console.log("删除本地文件失败");
-    }
-    return res.json({
-      result: 1,
-      msg: "key error"
-    });
-  }
+  // if (!key || time - key > 100000) {
+  //   //key 错误或者十秒外
+  //   //删除本地文件
+  //   let deleteResult = await deleteFile(req.file.path, 0);
+  //   if (deleteResult) {
+  //     console.log("删除本地文件成功");
+  //   }else{
+  //       console.log("删除本地文件失败");
+  //   }
+  //   return res.json({
+  //     result: 1,
+  //     msg: "key error"
+  //   });
+  // }
   console.log("上传");
   await put(req.body.prefix, req.file.filename, function(err, result) {
     if (err) {
@@ -97,6 +105,7 @@ app.post("/add", upload.single("file"), async function(req, res, next) {
 });
 //获取
 app.get("/get", async function(req, res, next) {
+  console.log('获取')
   // put(req.body.prefix,req.file.filename);
   await get(req.query.filename, function(err, result) {
     if (err) {
