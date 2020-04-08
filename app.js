@@ -51,6 +51,7 @@ let upload = multer({
 });
 //home
 app.get('/',function(req,res,next){
+  console.log('home')
   res.send(`oss 上传模块
     - /add 添加,需上传file,prefix(前缀,建议为项目英文名)
     - /get 获取,需上传获取的url链接
