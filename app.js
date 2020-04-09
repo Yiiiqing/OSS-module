@@ -30,6 +30,11 @@ app.all("*", function(req, res, next) {
   res.header("Content-Type", "application/json;charset=utf-8");
   next();
 });
+//检查是否有本地上传文件夹
+var exist = fs.existsSync('./uploads')
+if(!exist){
+  fs.mkdirSync('./uploads')
+}
 
 //存储点
 let storage = multer.diskStorage({
@@ -49,6 +54,10 @@ let upload = multer({
     cb(null, true);
   }
 });
+//test
+app.post('/test',function(req,res,next){
+  console.log('test',req.body,req)
+})
 //home
 app.get('/',function(req,res,next){
   console.log('home')
@@ -78,7 +87,7 @@ app.post("/add", upload.single("file"), async function(req, res, next) {
   //     msg: "key error"
   //   });
   // }
-  console.log("上传");
+  console.log("上传","body:",req.body,req);
   await put(req.body.prefix, req.file.filename, function(err, result) {
     if (err) {
       res.json({
@@ -91,7 +100,7 @@ app.post("/add", upload.single("file"), async function(req, res, next) {
       //上传成功
       res.json({
         result: 0,
-        url: result
+        filename: result
       });
       //删除本地文件
       console.log(req.file);
@@ -104,7 +113,9 @@ app.post("/add", upload.single("file"), async function(req, res, next) {
     }
   });
 });
-//获取
+/**
+  get 方式传filename,获取ali链接
+*/
 app.get("/get", async function(req, res, next) {
   console.log('获取')
   // put(req.body.prefix,req.file.filename);
